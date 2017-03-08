@@ -30,8 +30,8 @@ vaadin4spring:
 #facebook conf
 facebook:
   client:
-    clientId: 232719930446043
-    clientSecret: 9b66979ca161762d83f6677d2a368543
+    clientId: 
+    clientSecret: 
     accessTokenUri: https://graph.facebook.com/oauth/access_token
     userAuthorizationUri: https://www.facebook.com/dialog/oauth
     tokenName: oauth_token
