@@ -7,3 +7,6 @@
 - hsqldb
 - lombok
 - facebook4j
+# Test user credentials
+- username: teszt
+- password: teszt
