@@ -1,2 +1,2 @@
 # vaadinSpringBoot
-vaadin spring boot demo app
+- spring boot 1.5.2.RELEASE
