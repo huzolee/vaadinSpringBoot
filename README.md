@@ -7,6 +7,8 @@
 - hsqldb
 - lombok
 - facebook4j
+- yaml configuration
+- slf4j
 
 # Test user credentials
 - username: teszt
