@@ -52,10 +52,10 @@ public class UserService implements UserDetailsService {
                 user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getUserRole())));
     }
 
-    public User saveUser(final User user) {
-        log.info("save user: " + user.getName());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+    public User saveUser(final UserDTO userDTO) {
+        log.info("save user: " + userDTO.getName());
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        return userRepository.save(new User(userDTO));
     }
 
     public User findByUsername(final String username) {
@@ -83,11 +83,9 @@ public class UserService implements UserDetailsService {
         userDTO.setConfirmEmail("teszt@email.com");
         userDTO.setUserRole(ROLE_ADMIN);
 
-        final User user = new User(userDTO);
+        log.info("test user initialized: " + userDTO);
 
-        log.info("test user initialized: " + user);
-
-        saveUser(user);
+        saveUser(userDTO);
         log.info("test user saved");
     }
 }

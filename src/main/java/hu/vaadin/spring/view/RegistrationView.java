@@ -1,5 +1,6 @@
 package hu.vaadin.spring.view;
 
+import com.vaadin.data.Item;
 import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.util.BeanItem;
@@ -25,6 +26,7 @@ import hu.vaadin.spring.model.User;
 import hu.vaadin.spring.service.UserService;
 import hu.vaadin.spring.ui.RegistrationUI;
 import hu.vaadin.spring.util.FBUserData;
+import static hu.vaadin.spring.util.SessionAttribute.USER_DATA_ATTR_NAME;
 import hu.vaadin.spring.util.Util;
 import java.util.Collection;
 import java.util.Locale;
@@ -33,7 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.annotation.Secured;
 import org.vaadin.spring.i18n.I18N;
-import static hu.vaadin.spring.util.SessionAttribute.USER_DATA_ATTR_NAME;
 
 /**
  *
@@ -202,6 +203,7 @@ public class RegistrationView extends VerticalLayout implements IAbstractView {
         fieldGroup.bind(email, "email");
         fieldGroup.bind(confirmEmail, "confirmEmail");
         fieldGroup.bind(password, "password");
+        fieldGroup.bind(confirmPassword, "confirmPassword");
         fieldGroup.bind(facebookId, "facebookId");
 
         log.info("fieldGroup created");
@@ -218,19 +220,11 @@ public class RegistrationView extends VerticalLayout implements IAbstractView {
                 return;
             }
 
-            User newUser;
+            final Item itemDataSource = fieldGroup.getItemDataSource();
+            final UserDTO newUserDTO = new UserDTO(itemDataSource);
+            final User savedUser = userService.saveUser(newUserDTO);
 
-            newUser = new User(name.getValue(), email.getValue(), password.getValue(), ROLE_USER);
-
-            final String fbId = facebookId.getValue();
-
-            if (fbId != null && !fbId.isEmpty()) {
-                newUser = new User(name.getValue(), email.getValue(), password.getValue(), ROLE_USER, fbId);
-            }
-
-            final User savedUser = userService.saveUser(newUser);
-
-            if (fbId != null && !fbId.isEmpty()) {
+            if (newUserDTO.getFacebookId() != null && !newUserDTO.getFacebookId().isEmpty()) {
                 httpSession.setAttribute(USER_DATA_ATTR_NAME.getName(), savedUser);
             }
         });
