@@ -16,5 +16,3 @@
 
 # Facebook
 - if you want to use facebook integration, you have to fill the clientId and clientSecret in the application.yml
-    -clientId: your client id
-    -clientSecret: your client secret
