@@ -9,6 +9,7 @@ import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.data.validator.StringLengthValidator;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Field;
@@ -30,7 +31,6 @@ import static hu.vaadin.spring.util.SessionAttribute.USER_DATA_ATTR_NAME;
 import hu.vaadin.spring.util.Util;
 import java.util.Collection;
 import java.util.Locale;
-import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.access.annotation.Secured;
@@ -47,7 +47,6 @@ import org.vaadin.spring.i18n.I18N;
 public class RegistrationView extends VerticalLayout implements IAbstractView {
 
     private final UserService userService;
-    private final HttpSession httpSession;
     private final Util util;
     private final I18N i18n;
 
@@ -151,9 +150,8 @@ public class RegistrationView extends VerticalLayout implements IAbstractView {
         }
     };
 
-    public RegistrationView(final HttpSession httpSession, final UserService userService,
+    public RegistrationView(final UserService userService,
             final Util util, final I18N i18n) {
-        this.httpSession = httpSession;
         this.userService = userService;
         this.util = util;
         this.i18n = i18n;
@@ -225,7 +223,7 @@ public class RegistrationView extends VerticalLayout implements IAbstractView {
             final User savedUser = userService.saveUser(newUserDTO);
 
             if (newUserDTO.getFacebookId() != null && !newUserDTO.getFacebookId().isEmpty()) {
-                httpSession.setAttribute(USER_DATA_ATTR_NAME.getName(), savedUser);
+                VaadinSession.getCurrent().setAttribute(USER_DATA_ATTR_NAME.getName(), savedUser);
             }
         });
 

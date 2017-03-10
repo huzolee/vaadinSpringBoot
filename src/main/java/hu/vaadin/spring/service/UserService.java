@@ -1,5 +1,6 @@
 package hu.vaadin.spring.service;
 
+import com.vaadin.server.VaadinSession;
 import com.vaadin.spring.annotation.SpringComponent;
 import hu.vaadin.spring.dto.UserDTO;
 import static hu.vaadin.spring.enumeration.Role.ROLE_ADMIN;
@@ -8,7 +9,6 @@ import hu.vaadin.spring.repository.UserRepository;
 import static hu.vaadin.spring.util.SessionAttribute.USER_DATA_ATTR_NAME;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,12 +26,10 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final HttpSession httpSession;
 
-    public UserService(final UserRepository userRepository, final PasswordEncoder passwordEncoder, final HttpSession httpSession) {
+    public UserService(final UserRepository userRepository, final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.httpSession = httpSession;
     }
 
     @Override
@@ -46,8 +44,8 @@ public class UserService implements UserDetailsService {
 
     private UserDetails createUser(final User user) {
         log.info("authentication success for " + user);
-
-        httpSession.setAttribute(USER_DATA_ATTR_NAME.getName(), user);
+        
+        VaadinSession.getCurrent().setAttribute(USER_DATA_ATTR_NAME.getName(), user);
         return new org.springframework.security.core.userdetails.User(user.getName(),
                 user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getUserRole())));
     }
